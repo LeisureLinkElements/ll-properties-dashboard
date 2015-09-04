@@ -56,10 +56,9 @@ Example:
       <template is="dom-if" if="{{_isGridView(_view)}}" restamp>
         <div class="col-md-12">
           <template is="dom-repeat" items="[[units]]" as="unit">
-            <iron-ajax id="{{unit.id}}" method="GET" on-response="_handleImageGet" on-error="_handleImageError" handle-as="json" ></iron-ajax>
+            <iron-ajax id="{{unit.unitId}}" method="GET" on-response="_handleImageGet" on-error="_handleImageError" handle-as="json" ></iron-ajax>
             <div class="col-md-3 col-sm-6">
-              <ll-baseball-card id="{{unit.id}}" image-id="{{unit.id}}" title="{{unit.name}}" >
-                <p>Hello <span>{{id}}</span></p>
+              <ll-baseball-card id="{{unit.unitId}}" image-id="{{unit.unitId}}" title="{{unit.name}}" >
               </ll-baseball-card>
             </div>
           </template>
@@ -140,8 +139,8 @@ Example:
     attached: function() {
       var self = this;
       this.units.forEach(function(unit) {
-        var unitAjax = self.$$('iron-ajax#'+unit.id);
-        unitAjax.url = self.imageUrl + '/images-api/public/v1/en/units/' + unit.id + '/default';
+        var unitAjax = self.$$('iron-ajax#'+unit.unitId);
+        unitAjax.url = self.imageUrl + '/images-api/public/v1/en/units/' + unit.unitId + '/default';
         unitAjax.generateRequest();
       });
     },
@@ -168,12 +167,14 @@ Example:
     },
 
     _viewEditClicked: function(e) {
-      this.fire('dashboard-view-edit-clicked', {id: e.model.item.id});
+      this.fire('dashboard-view-edit-clicked', {id: e.model.item.unitId});
     },
 
     _handleImageGet: function(evt, detail) {
       var unitId = evt.srcElement.params.unitId;
-      this.$$('ll-baseball-card#'+unitId).imageSource = detail.response.url;
+      if(detail.response) {
+        this.$$('ll-baseball-card#'+unitId).imageSource = detail.response.url;
+      }
     },
 
     _handleImageError: function(evt, detail) {
