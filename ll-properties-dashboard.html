@@ -1,0 +1,186 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../ll-theme/ll-theme.html">
+<link rel="import" href="../ll-baseball-card/ll-baseball-card.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+
+<!--
+An element providing a solution to no problem in particular.
+
+Example:
+
+    <ll-properties-dashboard></ll-properties-dashboard>
+
+@demo
+-->
+<dom-module id="ll-properties-dashboard">
+
+  <style>
+    .view-switcher > .entypo[id*='view-switch'] {
+      border: 1px solid #ccc;
+      -webkit-border-radius: 8px;
+      -moz-border-radius: 8px;
+      border-radius: 8px;
+      padding: 4px 7px;
+    }
+    .view-switcher > label {
+      color: var(--blue);
+    }
+    .view-switcher > .entypo.active {
+      background: var(--blue);
+      color: white;
+    }
+    .col-md-2 {
+      width: auto;
+    }
+  </style>
+
+  <template>
+
+    <div class="row tab-control">
+
+      <div class="col-md-12">
+        <div class="filters pull-left col-md-10">
+          <label>Filters</label>
+        </div>
+
+        <div class="view-switcher pull-right col-md-2">
+          <label class="main-metric">View: </label>
+          <span id="grid-view-switch" class="entypo layout active"></span>
+          <span id="list-view-switch" class="entypo numbered-list"></span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="row">
+      <template is="dom-if" if="{{_isGridView(_view)}}" restamp>
+        <div class="col-md-12">
+          <template is="dom-repeat" items="[[units]]" as="unit">
+            <iron-ajax id="{{unit.id}}" method="GET" on-response="_handleImageGet" on-error="_handleImageError" handle-as="json" ></iron-ajax>
+            <div class="col-md-3 col-sm-6">
+              <ll-baseball-card id="{{unit.id}}" image-id="{{unit.id}}" title="{{unit.name}}" >
+                <p>Hello <span>{{id}}</span></p>
+              </ll-baseball-card>
+            </div>
+          </template>
+        </div>
+      </template>
+
+      <template is="dom-if" if="{{_isListView(_view)}}" restamp>
+        <div class="col-md-12">
+          <table>
+            <thead>
+            <tr>
+              <th>Property Name</th>
+              <th>View/Edit</th>
+            </tr>
+            </thead>
+            <tbody>
+              <template is="dom-repeat" items="[[units]]">
+                <tr>
+                  <td>{{item.name}}</td>
+                  <td><a href="#" on-click="_viewEditClicked"><span class="entypo pencil"></span> VIEW/EDIT</a></td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </template>
+    </div>
+
+  </template>
+
+</dom-module>
+
+<script>
+
+  Polymer({
+
+    is: 'll-properties-dashboard',
+
+    properties: {
+      /**
+       * Collection of properties to be displayed
+       */
+      units: {
+        type: Array,
+        value: []
+      },
+      /**
+       * Url for requesting images to be displayed in grid view
+       */
+      imageUrl: String,
+      /**
+       * The current view of the component. Can be one of: grid, view
+       */
+      _view: {
+        type: String,
+        value: 'grid'
+      }
+    },
+
+    /**
+     * Fired when the VIEW/EDIT link is clicked. Property id is passed on the event detail
+     *
+     * @event dashboard-view-edit-clicked
+     */
+
+    /**
+     * Fired when the ajax request errors when retrieving the image url
+     *
+     * @event dashboard-error
+     */
+
+    // Element Lifecycle
+    ready: function() {
+      this.$['grid-view-switch'].addEventListener('click', this._switchToGridView.bind(this));
+      this.$['list-view-switch'].addEventListener('click', this._switchToListView.bind(this));
+    },
+
+    attached: function() {
+      var self = this;
+      this.units.forEach(function(unit) {
+        var unitAjax = self.$$('iron-ajax#'+unit.id);
+        unitAjax.url = self.imageUrl;
+        unitAjax.params = { "unitId": unit.id };
+        unitAjax.generateRequest();
+      });
+    },
+
+    // Element Behavior
+    _isGridView: function(view) {
+     return view === 'grid';
+    },
+
+    _isListView: function(view) {
+      return view === 'list';
+    },
+
+    _switchToGridView: function() {
+      this._view = 'grid';
+      this.$['grid-view-switch'].classList.add('active');
+      this.$['list-view-switch'].classList.remove('active');
+    },
+
+    _switchToListView: function() {
+      this._view = 'list';
+      this.$['list-view-switch'].classList.add('active');
+      this.$['grid-view-switch'].classList.remove('active');
+    },
+
+    _viewEditClicked: function(e) {
+      this.fire('dashboard-view-edit-clicked', {id: e.model.item.id});
+    },
+
+    _handleImageGet: function(evt, detail) {
+      var unitId = evt.srcElement.params.unitId;
+      this.$$('ll-baseball-card#'+unitId).imageSource = detail.response.url;
+    },
+
+    _handleImageError: function() {
+      this.fire('dashboard-error');
+    }
+
+  });
+
+</script>
