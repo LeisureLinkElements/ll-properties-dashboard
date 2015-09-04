@@ -94,7 +94,7 @@ Example:
 
 <script>
 
-  Polymer({
+  LLPropertiesDashboard = Polymer({
 
     is: 'll-properties-dashboard',
 
@@ -126,7 +126,7 @@ Example:
      */
 
     /**
-     * Fired when the ajax request errors when retrieving the image url
+     * Fired when the ajax request errors when retrieving the image url. Error object is passed on the event detail
      *
      * @event dashboard-error
      */
@@ -141,8 +141,7 @@ Example:
       var self = this;
       this.units.forEach(function(unit) {
         var unitAjax = self.$$('iron-ajax#'+unit.id);
-        unitAjax.url = self.imageUrl;
-        unitAjax.params = { "unitId": unit.id };
+        unitAjax.url = self.imageUrl + '/images-api/public/v1/en/units/' + unit.id + '/default';
         unitAjax.generateRequest();
       });
     },
@@ -177,8 +176,8 @@ Example:
       this.$$('ll-baseball-card#'+unitId).imageSource = detail.response.url;
     },
 
-    _handleImageError: function() {
-      this.fire('dashboard-error');
+    _handleImageError: function(evt, detail) {
+      this.fire('dashboard-error', detail.error);
     }
 
   });

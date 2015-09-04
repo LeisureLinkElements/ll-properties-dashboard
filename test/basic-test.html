@@ -16,40 +16,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
     <script src="../../web-component-tester/browser.js"></script>
 
-    <!-- Step 1: import the element to test -->
     <link rel="import" href="../ll-properties-dashboard.html">
   </head>
   <body>
 
-    <!-- You can use the document as a place to set up your fixtures. -->
-    <ll-properties-dashboard></ll-properties-dashboard>
-
     <script>
-      var myEl = document.querySelector('ll-properties-dashboard');
-
-      suite('<ll-properties-dashboard>', function() {
-
-        test('defines the "author" property', function() {
-          assert.equal(myEl.author.name, 'Dimitri Glazkov');
-          assert.equal(myEl.author.image, 'http://addyosmani.com/blog/wp-content/uploads/2013/04/unicorn.jpg');
-        });
-
-        test('says hello', function() {
-          assert.equal(myEl.sayHello(), 'll-properties-dashboard says, Hello World!');
-
-          var greetings = myEl.sayHello('greetings Earthlings');
-          assert.equal(greetings, 'll-properties-dashboard says, greetings Earthlings');
-        });
-
-        test('fires lasers', function(done) {
-          myEl.addEventListener('ll-properties-dashboard-lasers', function(event) {
-            assert.equal(event.detail.sound, 'Pew pew!');
-            done();
-          });
-          myEl.fireLasers();
-        });
-
-      });
     </script>
 
   </body>
