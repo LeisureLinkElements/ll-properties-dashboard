@@ -119,7 +119,7 @@ Example:
     },
 
     /**
-     * Fired when the VIEW/EDIT link is clicked. Property id is passed on the event detail
+     * Fired when the VIEW/EDIT link or a baseball card is clicked. Property object is passed on the event detail
      *
      * @event dashboard-view-edit-clicked
      */
@@ -130,6 +130,10 @@ Example:
      * @event dashboard-error
      */
 
+    listeners: {
+      'll-baseball-card-clicked': '_viewEditClicked'
+    },
+
     // Element Lifecycle
     ready: function() {
       this.$['grid-view-switch'].addEventListener('click', this._switchToGridView.bind(this));
@@ -138,6 +142,12 @@ Example:
 
     attached: function() {
       var self = this;
+      //Timeout is being used for now to get over an issue with polymer not loading all the way in integration-hub
+      setTimeout(_getImages, 500);
+    },
+
+    // Element Behavior
+    _getImages: function() {
       this.units.forEach(function(unit) {
         var unitAjax = self.$$('iron-ajax#'+unit.unitId);
         unitAjax.url = self.imageUrl + '/images-api/public/v1/en/units/' + unit.unitId + '/default';
@@ -145,7 +155,6 @@ Example:
       });
     },
 
-    // Element Behavior
     _isGridView: function(view) {
      return view === 'grid';
     },
@@ -167,7 +176,7 @@ Example:
     },
 
     _viewEditClicked: function(e) {
-      this.fire('dashboard-view-edit-clicked', {id: e.model.item.unitId});
+      this.fire('dashboard-view-edit-clicked', { obj: e.model.item });
     },
 
     _handleImageGet: function(evt, detail) {
