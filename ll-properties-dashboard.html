@@ -3,6 +3,8 @@
 <link rel="import" href="../ll-baseball-card/ll-baseball-card.html">
 <link rel="import" href="../iron-ajax/iron-ajax.html">
 
+<script type="application/javascript" src="../lodash/lodash.js"></script>
+
 <!--
 An element providing a solution to no problem in particular.
 
@@ -131,7 +133,7 @@ Example:
      */
 
     listeners: {
-      'll-baseball-card-clicked': '_viewEditClicked'
+      'll-baseball-card-clicked': '_baseballCardClicked'
     },
 
     // Element Lifecycle
@@ -177,6 +179,13 @@ Example:
 
     _viewEditClicked: function(e) {
       this.fire('dashboard-view-edit-clicked', { obj: e.model.item });
+    },
+
+    _baseballCardClicked: function(e) {
+      var unit = _.find(this.units, function(u) {
+        return u.unitId === e.detail.id;
+      });
+      this.fire('dashboard-view-edit-clicked', { obj: unit });
     },
 
     _handleImageGet: function(evt, detail) {

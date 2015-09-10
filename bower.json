@@ -21,6 +21,7 @@
   ],
   "dependencies": {
     "ll-baseball-card": "LeisureLinkElements/ll-baseball-card",
+    "lodash": "~3.10.1",
     "polymer": "Polymer/polymer#^1.0.0"
   },
   "devDependencies": {
