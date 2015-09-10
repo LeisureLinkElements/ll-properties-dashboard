@@ -141,13 +141,13 @@ Example:
     },
 
     attached: function() {
-      var self = this;
       //Timeout is being used for now to get over an issue with polymer not loading all the way in integration-hub
-      setTimeout(_getImages, 500);
+      setTimeout(this._getImages.bind(this), 500);
     },
 
     // Element Behavior
     _getImages: function() {
+      var self = this;
       this.units.forEach(function(unit) {
         var unitAjax = self.$$('iron-ajax#'+unit.unitId);
         unitAjax.url = self.imageUrl + '/images-api/public/v1/en/units/' + unit.unitId + '/default';
