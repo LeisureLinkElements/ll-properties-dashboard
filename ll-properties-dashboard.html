@@ -24,13 +24,16 @@ Example:
       border-radius: 8px;
       padding: 4px 7px;
     }
+
     .view-switcher > label {
       color: var(--blue);
     }
+
     .view-switcher > .entypo.active {
       background: var(--blue);
       color: white;
     }
+
     .col-md-2 {
       width: auto;
     }
@@ -58,10 +61,9 @@ Example:
       <template is="dom-if" if="{{_isGridView(_view)}}" restamp>
         <div class="col-md-12">
           <template is="dom-repeat" items="[[units]]" as="unit">
-            <iron-ajax id="{{unit.unitId}}" method="GET" on-response="_handleImageGet" on-error="_handleImageError" handle-as="json" ></iron-ajax>
+            <iron-ajax id="{{unit.unitId}}" method="GET" on-response="_handleImageGet" on-error="_handleImageError" handle-as="json"></iron-ajax>
             <div class="col-md-3 col-sm-6">
-              <ll-baseball-card id="{{unit.unitId}}" image-id="{{unit.unitId}}" title="{{unit.name}}" >
-              </ll-baseball-card>
+              <ll-baseball-card id="{{unit.unitId}}" image-id="{{unit.unitId}}" title="{{unit.name}}"></ll-baseball-card>
             </div>
           </template>
         </div>
@@ -77,12 +79,12 @@ Example:
             </tr>
             </thead>
             <tbody>
-              <template is="dom-repeat" items="[[units]]">
-                <tr>
-                  <td>{{item.name}}</td>
-                  <td><a href="#" on-click="_viewEditClicked"><span class="entypo pencil"></span> VIEW/EDIT</a></td>
-                </tr>
-              </template>
+            <template is="dom-repeat" items="[[units]]">
+              <tr>
+                <td>{{item.name}}</td>
+                <td><a href="#" on-click="_viewEditClicked"><span class="entypo pencil"></span> VIEW/EDIT</a></td>
+              </tr>
+            </template>
             </tbody>
           </table>
         </div>
@@ -151,14 +153,14 @@ Example:
     _getImages: function() {
       var self = this;
       this.units.forEach(function(unit) {
-        var unitAjax = self.$$('iron-ajax#'+unit.unitId);
+        var unitAjax = self.$$('iron-ajax#' + unit.unitId);
         unitAjax.url = self.imageUrl + '/images-api/public/v1/en/units/' + unit.unitId + '/default';
         unitAjax.generateRequest();
       });
     },
 
     _isGridView: function(view) {
-     return view === 'grid';
+      return view === 'grid';
     },
 
     _isListView: function(view) {
@@ -190,8 +192,8 @@ Example:
 
     _handleImageGet: function(evt, detail) {
       var unitId = evt.srcElement.params.unitId;
-      if(detail.response) {
-        this.$$('ll-baseball-card#'+unitId).imageSource = detail.response.url;
+      if (detail.response) {
+        this.$$('ll-baseball-card#' + unitId).imageSource = detail.response.url;
       }
     },
 

@@ -1,0 +1,40 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../ll-baseball-card/ll-baseball-card.html">
+
+<dom-module id="ll-property-baseball-card">
+  <template>
+    <iron-ajax id="defaultImage" auto on-response="_handleResponse" on-error="_handleError" handle-as="json"></iron-ajax>
+    <ll-baseball-card id="card" image-id="{{unitId}}" title="{{unitName}}"></ll-baseball-card>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: 'll-property-baseball-card',
+
+    properties: {
+
+      /**
+       * The UnitId
+       */
+      unitId: { type: String, observer: '_unitIdChanged' },
+
+      /**
+       *  The Unit Name
+       */
+      unitName: String
+    },
+
+    _unitIdChanged: function (id) {
+      this.$.defaultImage.url = '/images-api/public/v1/en/units/' + id + '/default';
+    },
+
+    _handleResponse: function (e, detail) {
+      this.$.card.imageSource = detail.response.url;
+    },
+
+    _handleError: function (e, detail) {
+      this.fire('dashboard-error', detail.error);
+    }
+  })
+</script>
