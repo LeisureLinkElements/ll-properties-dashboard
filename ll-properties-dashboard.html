@@ -38,6 +38,9 @@ Example:
     .hidden {
       display: none;
     }
+    .pencil {
+      vertical-align: middle;
+    }
   </style>
 
   <template>
@@ -63,7 +66,7 @@ Example:
         <div class="col-md-12">
           <template is="dom-repeat" items="[[units]]" as="unit">
             <iron-ajax data-id$="{{unit.unitId}}" method="GET" on-response="_handleImageGet" on-error="_handleImageError" handle-as="json" ></iron-ajax>
-            <div class="col-md-3 col-sm-6">
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
               <ll-baseball-card data-id$="{{unit.unitId}}" image-id="{{unit.unitId}}" title="{{unit.name}}" >
               </ll-baseball-card>
             </div>
@@ -84,7 +87,7 @@ Example:
               <template is="dom-repeat" items="[[units]]">
                 <tr>
                   <td>{{item.name}}</td>
-                  <td><a href="#" on-click="_viewEditClicked"><span class="entypo pencil"></span> VIEW/EDIT</a></td>
+                  <td><button on-click="_viewEditClicked" class="btn btn-link"><span class="entypo pencil"></span> VIEW/EDIT</button> </td>
                 </tr>
               </template>
             </tbody>
