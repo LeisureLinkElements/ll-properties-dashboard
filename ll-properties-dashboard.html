@@ -58,9 +58,9 @@ Example:
       <template is="dom-if" if="{{_isGridView(_view)}}" restamp>
         <div class="col-md-12">
           <template is="dom-repeat" items="[[units]]" as="unit">
-            <iron-ajax id="{{unit.unitId}}" method="GET" on-response="_handleImageGet" on-error="_handleImageError" handle-as="json" ></iron-ajax>
+            <iron-ajax data-id$="{{unit.unitId}}" method="GET" on-response="_handleImageGet" on-error="_handleImageError" handle-as="json" ></iron-ajax>
             <div class="col-md-3 col-sm-6">
-              <ll-baseball-card id="{{unit.unitId}}" image-id="{{unit.unitId}}" title="{{unit.name}}" >
+              <ll-baseball-card data-id$="{{unit.unitId}}" image-id="{{unit.unitId}}" title="{{unit.name}}" >
               </ll-baseball-card>
             </div>
           </template>
@@ -151,8 +151,8 @@ Example:
     _getImages: function() {
       var self = this;
       this.units.forEach(function(unit) {
-        var unitAjax = self.$$('iron-ajax#'+unit.unitId);
-        unitAjax.url = self.imageUrl + '/images-api/public/v1/en/units/' + unit.unitId + '/default';
+        var unitAjax = self.$$('iron-ajax[data-id="' + unit.unitId + '"]');
+        unitAjax.url = self.imageUrl + 'images-api/public/v1/en/units/' + unit.unitId + '/default';
         unitAjax.generateRequest();
       });
     },
@@ -189,9 +189,9 @@ Example:
     },
 
     _handleImageGet: function(evt, detail) {
-      var unitId = evt.srcElement.params.unitId;
       if(detail.response) {
-        this.$$('ll-baseball-card#'+unitId).imageSource = detail.response.url;
+        var unitId = detail.response.unitId;
+        this.$$('ll-baseball-card[data-id="' + unitId + '"]').imageSource = detail.response.url;
       }
     },
 
