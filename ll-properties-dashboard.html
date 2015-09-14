@@ -34,6 +34,9 @@ Example:
     .col-md-2 {
       width: auto;
     }
+    .hidden {
+      display: none;
+    }
   </style>
 
   <template>
@@ -55,7 +58,7 @@ Example:
     </div>
 
     <div class="row">
-      <template is="dom-if" if="{{_isGridView(_view)}}" restamp>
+      <div id="grid-view">
         <div class="col-md-12">
           <template is="dom-repeat" items="[[units]]" as="unit">
             <iron-ajax data-id$="{{unit.unitId}}" method="GET" on-response="_handleImageGet" on-error="_handleImageError" handle-as="json" ></iron-ajax>
@@ -65,9 +68,9 @@ Example:
             </div>
           </template>
         </div>
-      </template>
+      </div>
 
-      <template is="dom-if" if="{{_isListView(_view)}}" restamp>
+      <div id="list-view">
         <div class="col-md-12">
           <table>
             <thead>
@@ -86,7 +89,7 @@ Example:
             </tbody>
           </table>
         </div>
-      </template>
+      </div>
     </div>
 
   </template>
@@ -140,6 +143,7 @@ Example:
     ready: function() {
       this.$['grid-view-switch'].addEventListener('click', this._switchToGridView.bind(this));
       this.$['list-view-switch'].addEventListener('click', this._switchToListView.bind(this));
+      this._switchToGridView();
     },
 
     attached: function() {
@@ -157,24 +161,22 @@ Example:
       });
     },
 
-    _isGridView: function(view) {
-     return view === 'grid';
-    },
-
-    _isListView: function(view) {
-      return view === 'list';
-    },
-
     _switchToGridView: function() {
       this._view = 'grid';
       this.$['grid-view-switch'].classList.add('active');
       this.$['list-view-switch'].classList.remove('active');
+
+      this.$['grid-view'].classList.remove('hidden');
+      this.$['list-view'].classList.add('hidden');
     },
 
     _switchToListView: function() {
       this._view = 'list';
       this.$['list-view-switch'].classList.add('active');
       this.$['grid-view-switch'].classList.remove('active');
+
+      this.$['grid-view'].classList.add('hidden');
+      this.$['list-view'].classList.remove('hidden');
     },
 
     _viewEditClicked: function(e) {
