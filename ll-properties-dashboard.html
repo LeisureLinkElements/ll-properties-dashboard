@@ -25,6 +25,8 @@ Example:
       border-radius: 8px;
       padding: 4px 7px;
       cursor: pointer;
+      text-align: right;
+      vertical-align: middle;
     }
     .view-switcher > label {
       color: var(--blue);
@@ -39,7 +41,14 @@ Example:
     .pencil {
       vertical-align: middle;
     }
+    .filter-hr{
+      margin-top:0;
+    }
 
+    .entypo.search{
+      border:none;
+      padding-left:0;
+    }
   </style>
 
   <style include="shared-styles"></style>
@@ -47,20 +56,24 @@ Example:
   <template>
 
     <div class="row tab-control">
+      <div class="filters filter col-lg-3 col-md-4 col-sm-6">
+        <form action="#">
+          <link rel="import" href="../integration-hub/ll-incremental-input/ll-incremental-input.html">
+          <input class="search form-control" type="text" name="name", autocomplete="off", placeholder="Search properties by name", is="ll-incremental-input"/>
+          <span class="entypo search"></span>
+        </form>
+      </div>
 
-      <div class="col-md-12">
-        <div class="filters pull-left col-md-10">
-          <label>Filters</label>
-        </div>
-
-        <div class="view-switcher pull-right col-md-2">
+      <div class="view-switcher col-lg-9 col-md-8 col-sm-6" style="text-align:right;">
+        <span style="border-right: 1px solid #ccc; height: 80px; vertical-align: middle; margin-right:10px; padding-right:10px;">
           <label class="main-metric">View: </label>
           <span id="grid-view-switch" class="entypo layout active"></span>
           <span id="list-view-switch" class="entypo numbered-list"></span>
-        </div>
+        </span>
+        <button class="btn btn-primary">Create New Property</button>
       </div>
-
     </div>
+    <hr class="filter-hr"/>
 
     <div class="row">
       <div id="grid-view">
