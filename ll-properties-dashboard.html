@@ -18,7 +18,7 @@ Example:
 <dom-module id="ll-properties-dashboard">
 
   <style>
-    .view-switcher > .entypo[id*='view-switch'] {
+    .entypo[id*='view-switch'] {
       border: 1px solid #ccc;
       -webkit-border-radius: 8px;
       -moz-border-radius: 8px;
@@ -58,7 +58,7 @@ Example:
     <div class="row tab-control">
       <div class="filters filter col-lg-3 col-md-4 col-sm-6">
         <form action="#">
-          <link rel="import" href="../integration-hub/ll-incremental-input/ll-incremental-input.html">
+          <link rel="import" href="../ll-incremental-input/ll-incremental-input.html">
           <input class="search form-control" type="text" name="name", autocomplete="off", placeholder="Search properties by name", is="ll-incremental-input"/>
           <span class="entypo search"></span>
         </form>
@@ -78,7 +78,7 @@ Example:
     <div class="row">
       <div id="grid-view">
         <div class="col-md-12">
-          <template is="dom-repeat" items="[[units]]" as="unit">
+          <template is="dom-repeat" items="[[_viewModels]]" as="unit">
             <iron-ajax data-id$="{{unit.unitId}}" method="GET" on-response="_handleImageGet" on-error="_handleImageError" handle-as="json" ></iron-ajax>
             <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
               <ll-baseball-card data-id$="{{unit.unitId}}" image-id="{{unit.unitId}}" title="{{unit.name}}" >
@@ -98,7 +98,7 @@ Example:
               </div>
             </div>
             <div class="table-body">
-              <template is="dom-repeat" items="[[units]]">
+              <template is="dom-repeat" items="[[_viewModels]]">
                 <div class="table-row">
                   <div class="table-cell">{{item.name}}</div>
                   <div class="table-cell"><button on-click="_viewEditClicked" class="btn btn-link"><span class="entypo pencil"></span> VIEW/EDIT</button> </div>
@@ -138,6 +138,13 @@ Example:
       _view: {
         type: String,
         value: 'grid'
+      },
+      /**
+      * View model property for client side filtering
+      */
+      _viewModels: {
+        type: Array,
+        value: []
       }
     },
 
@@ -154,11 +161,13 @@ Example:
      */
 
     listeners: {
-      'll-baseball-card-clicked': '_baseballCardClicked'
+      'll-baseball-card-clicked': '_baseballCardClicked',
+      'input-changed': '_searchSubmit'
     },
 
     // Element Lifecycle
     ready: function() {
+      this._viewModels = this.units;
       this.$['grid-view-switch'].addEventListener('click', this._switchToGridView.bind(this));
       this.$['list-view-switch'].addEventListener('click', this._switchToListView.bind(this));
       this._switchToGridView();
@@ -172,7 +181,7 @@ Example:
     // Element Behavior
     _getImages: function() {
       var self = this;
-      this.units.forEach(function(unit) {
+      this._viewModels.forEach(function(unit) {
         var unitAjax = self.$$('iron-ajax[data-id="' + unit.unitId + '"]');
         unitAjax.url = self.imageUrl + 'images-api/public/v1/en/units/' + unit.unitId + '/default';
         unitAjax.generateRequest();
@@ -202,7 +211,7 @@ Example:
     },
 
     _baseballCardClicked: function(e) {
-      var unit = _.find(this.units, function(u) {
+      var unit = _.find(this._viewModels, function(u) {
         return u.unitId === e.detail.id;
       });
       this.fire('dashboard-view-edit-clicked', { obj: unit });
@@ -217,6 +226,13 @@ Example:
 
     _handleImageError: function(evt, detail) {
       this.fire('dashboard-error', detail.error);
+    },
+    
+    _searchSubmit: function(evt) {
+      var regexp = new RegExp(evt.detail.value, 'i');
+      this._viewModels = _.filter(this.units, function(unit) {
+        return regexp.test(unit.name);
+      });
     }
 
   });
