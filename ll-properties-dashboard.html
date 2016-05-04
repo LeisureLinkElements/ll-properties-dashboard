@@ -4,8 +4,6 @@
 <link rel="import" href="../ll-baseball-card/ll-baseball-card.html">
 <link rel="import" href="../iron-ajax/iron-ajax.html">
 
-<script type="application/javascript" src="../lodash/lodash.js"></script>
-
 <!--
 An element providing a solution to no problem in particular.
 
@@ -102,6 +100,11 @@ Example:
 </dom-module>
 
 <script>
+  if (!Array.prototype.find) {
+    Array.prototype.find = function (predicate) {
+      return this.filter(predicate)[0];
+    };
+  }
 
   LLPropertiesDashboard = Polymer({
 
@@ -161,8 +164,10 @@ Example:
       var self = this;
       this.units.forEach(function(unit) {
         var unitAjax = self.$$('iron-ajax[data-id="' + unit.unitId + '"]');
-        unitAjax.url = self.imageUrl + 'images-api/public/v1/en/units/' + unit.unitId + '/default';
-        unitAjax.generateRequest();
+        if (unitAjax) {
+          unitAjax.url = self.imageUrl + 'images-api/public/v1/en/units/' + unit.unitId + '/default';
+          unitAjax.generateRequest();
+        }
       });
     },
 
@@ -189,7 +194,7 @@ Example:
     },
 
     _baseballCardClicked: function(e) {
-      var unit = _.find(this.units, function(u) {
+      var unit = this.units.find(function(u) {
         return u.unitId === e.detail.id;
       });
       this.fire('dashboard-view-edit-clicked', { obj: unit });
