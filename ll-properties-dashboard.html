@@ -38,6 +38,50 @@ Example:
       vertical-align: middle;
     }
 
+    .grid {
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: flex-start;
+      align-items: stretch;
+    }
+
+    ll-baseball-card {
+      flex: 0 0 calc(100% - 2em);
+      margin: 1em;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    @media (min-width: 640px) {
+      ll-baseball-card {
+        flex: 0 0 calc(50% - 2em);
+      }
+    }
+
+    @media (min-width: 1000px) {
+      ll-baseball-card {
+        flex: 0 0 calc(33.333% - 2em);
+      }
+    }
+
+    @media (min-width: 1300px) {
+      ll-baseball-card {
+        flex: 0 0 calc(25% - 2em);
+      }
+    }
+
+    @media (min-width: 1600px) {
+      ll-baseball-card {
+        flex: 0 0 calc(20% - 2em);
+      }
+    }
+
+    @media (min-width: 1800px) {
+      ll-baseball-card {
+        flex: 0 0 18em;
+      }
+    }
+
   </style>
 
   <style include="shared-styles"></style>
@@ -61,16 +105,12 @@ Example:
     </div>
 
     <div class="row">
-      <div id="grid-view">
-        <div class="col-md-12">
+      <div id="grid-view" class="grid">
           <template is="dom-repeat" items="[[units]]" as="unit">
             <iron-ajax data-id$="{{unit.unitId}}" method="GET" on-response="_handleImageGet" on-error="_handleImageError" handle-as="json" ></iron-ajax>
-            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
-              <ll-baseball-card data-id$="{{unit.unitId}}" image-id="{{unit.unitId}}" title="{{unit.name}}" >
-              </ll-baseball-card>
-            </div>
+            <ll-baseball-card data-id$="{{unit.unitId}}" image-id="{{unit.unitId}}" title="{{unit.name}}" image-aspect="0.75" >
+            </ll-baseball-card>
           </template>
-        </div>
       </div>
 
       <div id="list-view">
