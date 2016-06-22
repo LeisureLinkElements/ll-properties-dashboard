@@ -41,12 +41,25 @@ Example:
     .grid {
       display: flex;
       flex-flow: row wrap;
-      justify-content: space-between;
+      justify-content: flex-start;
+      align-items: stretch;
     }
 
-    .grid > * {
-      flex: 1 1 12em;
+    ll-baseball-card {
+      flex: 0 0 calc(100% - 2em);
       margin: 1em;
+    }
+
+    @media (min-width: 640px) {
+      ll-baseball-card {
+        flex: 0 0 calc(50% - 2em);
+      }
+    }
+
+    @media (min-width: 1000px) {
+      ll-baseball-card {
+        flex: 0 0 calc(33.333% - 2em);
+      }
     }
 
   </style>
