@@ -20,7 +20,7 @@
     "/demo/"
   ],
   "dependencies": {
-    "ll-baseball-card": "LeisureLinkElements/ll-baseball-card",
+    "ll-baseball-card": "LeisureLinkElements/ll-baseball-card#^1.0.1",
     "ll-theme": "LeisureLinkElements/ll-theme",
     "lodash": "~3.10.1",
     "polymer": "Polymer/polymer#^1.0.0"
