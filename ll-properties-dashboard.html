@@ -107,7 +107,7 @@ Example:
 
     <div class="row">
       <div id="grid-view" class="grid">
-          <template is="dom-repeat" items="[[units]]" as="unit">
+          <template is="dom-repeat" items="[[units]]" as="unit" sort="_sortUnits">
             <iron-ajax data-id$="{{unit.unitId}}" method="GET" on-response="_handleImageGet" on-error="_handleImageError" handle-as="json" ></iron-ajax>
             <ll-baseball-card data-id$="{{unit.unitId}}" image-id="{{unit.unitId}}" title="{{unit.name}}" image-aspect="0.75" >
             </ll-baseball-card>
@@ -124,7 +124,7 @@ Example:
               </div>
             </div>
             <div class="table-body">
-              <template is="dom-repeat" items="[[units]]">
+              <template is="dom-repeat" items="[[units]]" sort="_sortUnits">
                 <div class="table-row">
                   <div class="table-cell">{{item.name}}</div>
                   <div class="table-cell"><button on-click="_viewEditClicked" class="btn btn-link"><span class="entypo pencil"></span> VIEW/EDIT</button> </div>
@@ -228,6 +228,13 @@ Example:
 
       this.$['grid-view'].classList.add('hidden');
       this.$['list-view'].classList.remove('hidden');
+    },
+
+    _sortUnits: function(a, b) {
+      if(a.name === b.name)
+        return 0;
+      else
+        return a.name < b.name ? -1 : 1;
     },
 
     _viewEditClicked: function(e) {
