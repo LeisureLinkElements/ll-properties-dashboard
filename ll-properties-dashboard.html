@@ -203,10 +203,17 @@ Example:
     // Element Behavior
     _getImages: function() {
       var self = this;
+      var resolveWith = function (obj) {
+        return function (part) {
+          var match = part.match(/^:[\w-]*/);
+          var key = match ? match[0].replace(/^:/, '') : '';
+          return match ? obj[key] : part;
+        }
+      }
       this.units.forEach(function(unit) {
         var unitAjax = self.$$('iron-ajax[data-id="' + unit.unitId + '"]');
         if (unitAjax) {
-          unitAjax.url = self.imageUrl + 'images-api/public/v1/en/units/' + unit.unitId + '/default';
+          unitAjax.url = self.imageUrl.split('/').map(resolveWith(unit)).join('/'); // + 'images-api/public/v1/en/units/' + unit.unitId + '/default';
           unitAjax.generateRequest();
         }
       });
